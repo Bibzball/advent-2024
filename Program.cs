@@ -6,8 +6,8 @@ public class Advent2024
     static void Main(string[] args)
     {
         // var day = new Day1();
-        var day = new Day2();
-        // var day = new Day3();
+        // var day = new Day2();
+        var day = new Day3();
         // var day = new Day4();
         // var day = new Day5();
         // var day = new Day6();
