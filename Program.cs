@@ -10,8 +10,8 @@ public class Advent2024
         // var day = new Day3();
         // var day = new Day4();
         // var day = new Day5();
-        var day = new Day6();
-        // var day = new Day7();
+        // var day = new Day6();
+        var day = new Day7();
         // var day = new Day8();
         // var day = new Day9();
         // var day = new Day10();
