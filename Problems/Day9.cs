@@ -4,8 +4,8 @@ namespace advent_2024.problems;
 
 public class Day9 : Day<long, long>
 {
-    protected override TaskState Task1State => TaskState.Test;
-    protected override TaskState Task2State => TaskState.Test;
+    protected override TaskState Task1State => TaskState.Final;
+    protected override TaskState Task2State => TaskState.Final;
     
     protected override long ExecuteTask1(string input)
     {
@@ -81,176 +81,94 @@ public class Day9 : Day<long, long>
 
     private class Block
     {
-        private int m_FileID;
-        public int FileID => m_FileID;
+        public int FileID;
 
-        private int m_Size;
-        public int Size => m_Size;
-
-        private Block? m_PreviousBlock = null;
-        public Block? PreviousBlock
+        public Block(int fileID)
         {
-            get => m_PreviousBlock;
-            set => m_PreviousBlock = value;
-        }
-
-        private Block? m_NextBlock = null;
-        public Block? NextBlock
-        {
-            get => m_NextBlock;
-            set => m_NextBlock = value;
-        }
-
-        public bool IsFree => m_FileID == -1;
-
-        public Block(int fileID, int size)
-        {
-            m_FileID = fileID;
-            m_Size = size;
-        }
-
-        public void UseSize(int diff)
-        {
-            m_Size -= diff;
-        }
-
-        public void AddSize(int diff)
-        {
-            m_Size += diff;
+            FileID = fileID;
         }
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < m_Size; i++)
-            {
-                sb.Append(m_FileID == -1 ? "." : m_FileID);
-                sb.Append('|');
-            }
-                
-
-            return sb.ToString();
+            return FileID == -1 ? "." : FileID.ToString();
         }
-
-        public int GetChecksumPart(ref int startIndex)
-        {
-            int result = 0;
-            int maxIndex = startIndex + m_Size;
-            for (; startIndex < maxIndex; startIndex++)
-            {
-                if (m_FileID >= 0)
-                    result += startIndex * m_FileID;
-            }                
-            return result;
-        }
-    }
-
-    private class BlockList : LinkedList<Block>
-    {
-        public BlockList() : base() { }
     }
     
-
     protected override long ExecuteTask2(string input)
     {
         var blockList = ParseInput2(input);
-        // Console.WriteLine(String.Join("", blockList));
+        // Console.WriteLine(String.Join("|", blockList));
         SwapBlocks(blockList);
-        // Console.WriteLine(String.Join("", blockList));
-        
+        // Console.WriteLine(String.Join("|", blockList));
+
         long result = 0;
-        int startIndex = 0;
-        var block = blockList.First;
-        while (block != null)
+
+        for (int i = 0; i < blockList.Count; i++)
         {
-            result += block.Value.GetChecksumPart(ref startIndex);
-            block = block.Next;
+            if (blockList[i].FileID != -1)
+                result += blockList[i].FileID * i;
         }
 
         return result;
     }
 
-    private void SwapBlocks(BlockList blockList)
+    private void SwapBlocks(List<Block> blockList)
     {
-        var itFile = blockList.Last;
-        while (itFile != null)
+        for (int i = blockList.Count - 1; i >= 0; i--)
         {
-            if (!itFile.Value.IsFree)
+            var block = blockList[i];
+            if (block.FileID != -1)
             {
-                // Console.WriteLine(itFile.Value.FileID);
-                var fileToMove = itFile.Value;
-                var itFree = blockList.First;
-                while (itFree != null && itFree != itFile)
-                {
-                    if (itFree.Value.IsFree && itFree.Value.Size >= fileToMove.Size)
-                    {
-                        var orphan = itFile.Previous;
-                        
-                        // Remove the file from where it was... 
-                        blockList.Remove(itFile);
-                        
-                        // Add it before the freeBlock
-                        blockList.AddBefore(itFree, itFile);
-                        
-                        // Resize the free block
-                        itFree.Value.UseSize(fileToMove.Size);
-                        
-                        // Remove it if it's empty
-                        if (itFree.Value.Size == 0)
-                            blockList.Remove(itFree);
-                        
-                        // Merge the free blocks around where the file was
-                        if (orphan.Value.IsFree)
-                            orphan.Value.AddSize(fileToMove.Size);
-                        else if (orphan.Next != null && orphan.Next.Value.IsFree)
-                            orphan.Next.Value.AddSize(fileToMove.Size);
-                        else 
-                            blockList.AddAfter(orphan, new Block(-1, fileToMove.Size));
-                        
-                        if (orphan.Value.IsFree && orphan.Next != null && orphan.Next.Value.IsFree)
-                        {
-                            orphan.Value.AddSize(orphan.Next.Value.Size);
-                            blockList.Remove(orphan.Next);
-                        }
+                // Console.WriteLine(block.FileID);
+                int fileEnd = i;
+                int fileID = block.FileID;
+                while (i > 0 && blockList[i-1].FileID == fileID)
+                    i--;
+                int fileStart = i;
+                int fileSize = fileEnd - fileStart + 1;
 
-                        itFile = orphan;
-                        break;
+                int freeSize = 0;
+                int freeStart = 0;
+                for (int j = 0; j < i; j++)
+                {
+                    if (blockList[j].FileID == -1)
+                    {
+                        if (freeSize == 0)
+                            freeStart = j;
+                        freeSize++;
+                        if (freeSize >= fileSize)
+                        {
+                            for (int freeOverwrite = freeStart; freeOverwrite <= j; freeOverwrite++)
+                                blockList[freeOverwrite].FileID = fileID;
+                            for (int fileOverwrite = fileStart; fileOverwrite <= fileEnd; fileOverwrite++)
+                                blockList[fileOverwrite].FileID = -1;
+                            break;
+                        }
                     }
-                    itFree = itFree.Next;
+                    else
+                        freeSize = 0;
                 }
-                // Console.WriteLine(String.Join("", blockList));
+                // Console.WriteLine(String.Join("|", blockList));
             }
-            itFile = itFile.Previous;
         }
     }
 
-    private BlockList ParseInput2(string input)
+    private List<Block> ParseInput2(string input)
     {
-        BlockList res = new BlockList();
-        
-        bool isFreeSpace = false;
+        List<Block> result = new List<Block>();
         int fileID = 0;
-        
-        for (var index = 0; index < input.Length; index++)
+        bool isFreeSpace = false;
+        for (int i = 0; i < input.Length; i++)
         {
-            var c = input[index];
-            int size = int.Parse(c.ToString());
-
-            Block nextBlock;
+            var size = int.Parse(input[i].ToString());
+            int fileIDToConsider = isFreeSpace ? -1 : fileID;
+            for (int j = 0; j < size; j++)
+                result.Add(new Block(fileIDToConsider));
             if (!isFreeSpace)
-            {
-                nextBlock = new Block(fileID, size); 
                 fileID++;
-            }
-            else
-            {
-                nextBlock = new Block(-1, size);
-            }
-
-            res.AddLast(nextBlock);
             isFreeSpace = !isFreeSpace;
         }
 
-        return res;
+        return result;
     }
 }
