@@ -25,11 +25,22 @@ public abstract class Vector2Map<T>
                 return default;
             }
         }
+        set => m_Map[x, y] = value;
     }
 
-    public T this[Vector2Int pos]
+    public T? this[Vector2Int pos]
     {
-        get => m_Map[pos.x, pos.y];
+        get
+        {
+            try
+            {
+                return m_Map[pos.x, pos.y];
+            }
+            catch (IndexOutOfRangeException)
+            {
+                return default;
+            }
+        }
         set => m_Map[pos.x, pos.y] = value;
     }
 

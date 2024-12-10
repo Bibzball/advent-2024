@@ -39,6 +39,14 @@ public static class Vector2DirectionExtensions
         }
     }
 
+    public static readonly Vector2Direction[] NonDiagonals = new[]
+    {
+        Vector2Direction.N,
+        Vector2Direction.S,
+        Vector2Direction.E,
+        Vector2Direction.W,
+    };
+
     public static Vector2Direction ToVector2Direction(this Vector2Int direction)
     {
         if (direction.x == 0)
