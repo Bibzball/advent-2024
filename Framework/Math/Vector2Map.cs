@@ -55,4 +55,13 @@ public abstract class Vector2Map<T>
         Vector2Int neighbour = pos + dirIncrement;
         return this[neighbour];
     }
+
+    public T GetTiledNeighbour(Vector2Int pos, Vector2Int distance)
+    {
+        var x = (pos.x + distance.x) % Width;
+        if (x < 0) x += Width;
+        var y = (pos.y + distance.y) % Height;
+        if (y < 0) y += Height;
+        return m_Map[x, y];
+    }
 }
