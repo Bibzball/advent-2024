@@ -30,7 +30,7 @@ public class Advent2024
         // var day = new Day23();
         // var day = new Day24();
 
-        // Task1(day);
+        Task1(day);
         Task2(day);
     }
 
