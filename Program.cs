@@ -18,8 +18,8 @@ public class Advent2024
         // var day = new Day11();
         // var day = new Day12();
         // var day = new Day13();
-        var day = new Day14();
-        // var day = new Day15();
+        // var day = new Day14();
+        var day = new Day15();
         // var day = new Day16();
         // var day = new Day17();
         // var day = new Day18();
@@ -30,7 +30,7 @@ public class Advent2024
         // var day = new Day23();
         // var day = new Day24();
 
-        Task1(day);
+        // Task1(day);
         Task2(day);
     }
 

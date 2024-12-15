@@ -21,6 +21,11 @@ public class Vector2Int : IEquatable<Vector2Int>
         return new Vector2Int(a.x - b.x, a.y - b.y);
     }
 
+    public static Vector2Int operator *(Vector2Int a, int b)
+    {
+        return new Vector2Int(a.x * b, a.y * b);
+    }
+
     public override string ToString()
     {
         return $"({x}, {y})";
