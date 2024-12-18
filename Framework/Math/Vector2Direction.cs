@@ -47,6 +47,31 @@ public static class Vector2DirectionExtensions
         Vector2Direction.W,
     };
 
+    public static Vector2Direction Opposite(this Vector2Direction direction)
+    {
+        switch (direction)
+        {
+            case Vector2Direction.N:
+                return Vector2Direction.S;
+            case Vector2Direction.NE:
+                return Vector2Direction.SW;
+            case Vector2Direction.E:
+                return Vector2Direction.W;
+            case Vector2Direction.SE:
+                return Vector2Direction.NW;
+            case Vector2Direction.S:
+                return Vector2Direction.N;
+            case Vector2Direction.SW:
+                return Vector2Direction.NE;
+            case Vector2Direction.W:
+                return Vector2Direction.E;
+            case Vector2Direction.NW:
+                return Vector2Direction.SE;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(direction), direction, null);
+        }
+    }
+
     public static Vector2Direction ToVector2Direction(this Vector2Int direction)
     {
         if (direction.x == 0)

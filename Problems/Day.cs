@@ -4,6 +4,7 @@ namespace advent_2024.problems
     {
         protected enum TaskState
         {
+            Ignore,
             Test,
             Final,
         }
@@ -28,6 +29,8 @@ namespace advent_2024.problems
             string input;
             switch (state)
             {
+                case TaskState.Ignore:
+                    return default(T);
                 case TaskState.Test:
                     input = ReadTestInput();
                     break;
