@@ -20,9 +20,9 @@ public class Advent2024
         // var day = new Day13();
         // var day = new Day14();
         // var day = new Day15();
-        var day = new Day16();
+        // var day = new Day16();
         // var day = new Day17();
-        // var day = new Day18();
+        var day = new Day18();
         // var day = new Day19();
         // var day = new Day20();
         // var day = new Day21();
@@ -37,12 +37,12 @@ public class Advent2024
     private static void Task1<T1, T2>(Day<T1, T2> day)
     {
         T1 result = day.Task1();
-        Logging.LogInfo($"{day.GetType().Name}: Task 1", result.ToString());
+        Logging.LogInfo($"{day.GetType().Name}: Task 1", result?.ToString());
     }
     
     private static void Task2<T1, T2>(Day<T1, T2> day)
     {
         T2 result = day.Task2();
-        Logging.LogInfo($"{day.GetType().Name}: Task 2", result.ToString());
+        Logging.LogInfo($"{day.GetType().Name}: Task 2", result?.ToString());
     }
 }
