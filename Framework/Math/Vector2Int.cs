@@ -26,6 +26,11 @@ public class Vector2Int : IEquatable<Vector2Int>
         return new Vector2Int(a.x * b, a.y * b);
     }
 
+    public static int ManhattanDistance(Vector2Int a, Vector2Int b)
+    {
+        return System.Math.Abs(b.x - a.x) + System.Math.Abs(b.y - a.y);
+    }
+
     public override string ToString()
     {
         return $"({x}, {y})";
